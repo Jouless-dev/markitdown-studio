@@ -46,6 +46,7 @@ def generate_icons(source_path: Path):
         launcher_src.write_text("""using System;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 
 class Program
 {
@@ -57,21 +58,32 @@ class Program
         string mainPy = Path.Combine(dir, "main.py");
 
         if (!File.Exists(pythonw)) {
-            pythonw = "pythonw.exe";
+            DialogResult res = MessageBox.Show(
+                "MarkItDown Studio (Source Code Edition)\\n\\n" +
+                "The virtual environment (.venv) was not found in this folder.\\n\\n" +
+                "• If you want to use the application without installing Python, please download the standalone portable version from GitHub Releases:\\n" +
+                "  https://github.com/Jouless-dev/markitdown-studio/releases\\n\\n" +
+                "• Would you like to open the GitHub Releases page now?",
+                "MarkItDown Studio",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Information
+            );
+            if (res == DialogResult.Yes) {
+                Process.Start("https://github.com/Jouless-dev/markitdown-studio/releases");
+            }
+            return;
         }
 
-        ProcessStartInfo psi = new ProcessStartInfo();
-        psi.FileName = pythonw;
-        psi.Arguments = "\\"" + mainPy + "\\"";
-        psi.WorkingDirectory = dir;
-        psi.UseShellExecute = false;
-        psi.CreateNoWindow = true;
-
         try {
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.FileName = pythonw;
+            psi.Arguments = "\\"" + mainPy + "\\"";
+            psi.WorkingDirectory = dir;
+            psi.UseShellExecute = false;
+            psi.CreateNoWindow = true;
             Process.Start(psi);
-        } catch {
-            psi.FileName = "python.exe";
-            Process.Start(psi);
+        } catch (Exception ex) {
+            MessageBox.Show("Error starting MarkItDown Studio:\\n\\n" + ex.Message, "MarkItDown Studio", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
@@ -81,6 +93,7 @@ class Program
         cmd = [
             str(csc),
             "/target:winexe",
+            "/reference:System.Windows.Forms.dll",
             f"/win32icon:{assets_dir / 'app_logo.ico'}",
             f"/out:{output_exe}",
             str(launcher_src)

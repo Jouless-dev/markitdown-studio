@@ -26,8 +26,13 @@ try:
 except Exception:
     pass
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
+if getattr(sys, "frozen", False):
+    ROOT_DIR = Path(sys._MEIPASS)
+else:
+    ROOT_DIR = Path(__file__).resolve().parent.parent
+
 UI_DIR = ROOT_DIR / "src" / "ui"
+ASSETS_DIR = ROOT_DIR / "assets"
 
 class AppAPI:
     """Secure Python API bridge exposed to JavaScript via PyWebView."""
@@ -204,9 +209,9 @@ class AppAPI:
 
 def _apply_windows_icon(title: str = "MarkItDown Studio"):
     """Binds application icon to titlebar, Alt+Tab and taskbar via Win32 API."""
-    ico_path = (ROOT_DIR / "assets" / "app_logo.ico").resolve()
+    ico_path = (ASSETS_DIR / "app_logo.ico").resolve()
     if not ico_path.exists():
-        ico_path = (ROOT_DIR / "assets" / "app.ico").resolve()
+        ico_path = (ASSETS_DIR / "app.ico").resolve()
     if not ico_path.exists():
         return
 
@@ -233,27 +238,41 @@ def _apply_windows_icon(title: str = "MarkItDown Studio"):
 
 
 def main():
-    api = AppAPI()
-    index_file = UI_DIR / "index.html"
+    try:
+        api = AppAPI()
+        index_file = UI_DIR / "index.html"
 
-    if not index_file.exists():
-        print(f"Error: UI not found at {index_file}")
+        if not index_file.exists():
+            ctypes.windll.user32.MessageBoxW(
+                0,
+                f"Critical Error: UI files not found.\nExpected path: {index_file}",
+                "MarkItDown Studio",
+                0x10
+            )
+            sys.exit(1)
+
+        window_title = "MarkItDown Studio"
+        window = webview.create_window(
+            title=window_title,
+            url=str(index_file),
+            js_api=api,
+            width=920,
+            height=740,
+            min_size=(780, 560),
+            background_color="#08090b",
+            text_select=True
+        )
+
+        threading.Thread(target=_apply_windows_icon, args=(window_title,), daemon=True).start()
+        webview.start(debug=False)
+    except Exception as e:
+        ctypes.windll.user32.MessageBoxW(
+            0,
+            f"Failed to start MarkItDown Studio:\n\n{e}",
+            "MarkItDown Studio Error",
+            0x10
+        )
         sys.exit(1)
-
-    window_title = "MarkItDown Studio"
-    window = webview.create_window(
-        title=window_title,
-        url=str(index_file),
-        js_api=api,
-        width=920,
-        height=740,
-        min_size=(780, 560),
-        background_color="#08090b",
-        text_select=True
-    )
-
-    threading.Thread(target=_apply_windows_icon, args=(window_title,), daemon=True).start()
-    webview.start(debug=False)
 
 if __name__ == "__main__":
     main()

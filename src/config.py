@@ -1,8 +1,12 @@
+import sys
 import json
 import winreg
 from pathlib import Path
 
-CONFIG_FILE = Path(__file__).resolve().parent.parent / "config.json"
+if getattr(sys, "frozen", False):
+    CONFIG_FILE = Path(sys.executable).parent / "config.json"
+else:
+    CONFIG_FILE = Path(__file__).resolve().parent.parent / "config.json"
 
 def get_default_downloads_dir() -> str:
     """Detects the official Windows Downloads folder or falls back to ~/Downloads."""
