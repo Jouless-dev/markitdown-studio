@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarkItDown Studio</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Pixel Dust -->
+  <div class="pixel-dust" aria-hidden="true">
+    <div class="cluster top-left">
+      <span class="px px-cyan"></span><span class="px"></span>
+      <span class="px"></span><span class="px px-cyan"></span>
+    </div>
+    <div class="cluster top-right">
+      <span class="px"></span><span class="px px-cyan"></span>
+      <span class="px px-cyan"></span><span class="px"></span>
+    </div>
+    <div class="cluster bottom-left">
+      <span class="px"></span><span class="px px-cyan"></span>
+    </div>
+    <div class="cluster bottom-right">
+      <span class="px px-cyan"></span><span class="px"></span>
+    </div>
+  </div>
+
+  <div class="app-wrapper">
+    <!-- Navbar -->
+    <header class="app-nav">
+      <div class="nav-brand">
+        <img src="favicon.png" alt="Logo" class="nav-logo">
+        <span class="nav-title">MARKITDOWN</span>
+        <span class="pixel-badge" id="status-badge">[READY]</span>
+      </div>
+      <div class="nav-meta">
+        <span class="nav-version">v1.0.0</span>
+      </div>
+    </header>
+
+    <!-- Main Viewport (Centered) -->
+    <main class="app-main">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="pill-badge">
+          <span class="pill-dot"></span>
+          <span>Microsoft MarkItDown • Local &amp; Private</span>
+        </div>
+
+        <div class="wordmark-container">
+          <img src="markitdown-wordmark.svg" alt="MARKITDOWN" class="pixel-wordmark">
+        </div>
+
+        <p class="hero-tagline">Fast, minimal &amp; private document to markdown conversion.</p>
+      </section>
+
+      <!-- Centerpiece: Dropzone Viewport -->
+      <section class="dropzone-section">
+        <div class="pixel-dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop files or click to browse">
+          <input type="file" id="file-input" multiple style="display: none;">
+          
+          <!-- Viewfinder corner brackets -->
+          <div class="px-corner tl"></div>
+          <div class="px-corner tr"></div>
+          <div class="px-corner bl"></div>
+          <div class="px-corner br"></div>
+
+          <div class="dropzone-content">
+            <div class="terminal-prompt">
+              <span class="prompt-sig">$</span>
+              <span class="prompt-text" id="prompt-label">DROP FILES TO CONVERT</span>
+              <span class="prompt-cursor">_</span>
+            </div>
+            <p class="dropzone-sub">or click inside this viewport to browse</p>
+
+            <div class="formats-bar">
+              <span class="fmt">PDF</span>
+              <span class="fmt">DOCX</span>
+              <span class="fmt">XLSX</span>
+              <span class="fmt">PPTX</span>
+              <span class="fmt">HTML</span>
+              <span class="fmt">CSV</span>
+              <span class="fmt">JSON</span>
+              <span class="fmt">ZIP</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Progress Track (Active during conversion) -->
+      <section class="pixel-panel progress-panel" id="progress-card" style="display: none;">
+        <div class="panel-header">
+          <span class="panel-title" id="progress-text">CONVERTING FILES...</span>
+          <span class="panel-counter" id="progress-count">0 / 0</span>
+        </div>
+        <div class="pixel-progress-track">
+          <div class="pixel-progress-fill" id="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+      </section>
+
+      <!-- Destination Controls -->
+      <section class="pixel-panel destination-panel">
+        <div class="dest-row">
+          <div class="dest-info">
+            <span class="dest-label">OUTPUT:</span>
+            <div class="dest-path" id="current-dest-text" title="Default save directory">C:\Users\Downloads</div>
+          </div>
+          <div class="dest-buttons">
+            <button class="pixel-btn pixel-btn-outline" id="btn-change-folder" title="Choose custom destination folder">
+              <span>Change</span>
+            </button>
+            <button class="pixel-btn pixel-btn-outline" id="btn-open-folder" title="Open folder in Windows Explorer">
+              <span>Open Dir ↗</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="dest-toggle-row">
+          <label class="pixel-checkbox" title="Prompt to select a folder on every conversion">
+            <input type="checkbox" id="toggle-ask-dest">
+            <span class="checkbox-box"></span>
+            <span class="checkbox-label">Ask where to save on each conversion</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Results & History Log -->
+      <section class="results-panel">
+        <div class="panel-header" id="results-header" style="display: none;">
+          <div class="header-tag-group">
+            <span class="tech-badge">OUTPUT</span>
+            <span class="panel-title">CONVERTED FILES</span>
+          </div>
+          <button class="pixel-link-btn" id="btn-clear-results">[ Clear List ]</button>
+        </div>
+
+        <div class="results-container" id="results-list"></div>
+      </section>
+    </main>
+
+    <!-- Modal for Full Markdown Inspection -->
+    <div class="modal-overlay" id="preview-modal" style="display: none;">
+      <div class="pixel-modal">
+        <div class="modal-top">
+          <div class="modal-meta">
+            <span class="pixel-dot"></span>
+            <span class="modal-file-title" id="modal-filename">document.md</span>
+            <span class="pixel-badge" id="modal-filesize">0 lines • 0 chars</span>
+          </div>
+          <div class="modal-actions">
+            <button class="pixel-btn pixel-btn-silver btn-sm" id="btn-copy-preview">
+              <span>Copy Full Markdown</span>
+            </button>
+            <button class="pixel-btn pixel-btn-outline btn-sm" id="btn-close-modal">
+              <span>Esc [Close]</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-content">
+          <pre class="pixel-code"><code id="modal-code"></code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Stack -->
+    <div class="toast-stack" id="toast-container"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

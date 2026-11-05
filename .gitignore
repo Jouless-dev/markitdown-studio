@@ -1,0 +1,41 @@
+# Environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# PyInstaller & Build Artifacts
+build/
+dist/
+*.spec
+
+# User Configuration & Output
+config.json
+outputs/*
+!outputs/.gitkeep
+markitdown_temp/
+*.tmp
+
+# Operating System & IDE
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+*.lnk
+*.log
+
+# Editor Directories
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
