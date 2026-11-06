@@ -17,13 +17,17 @@ def _handle_exception(exc_type, exc_value, exc_tb):
 
 sys.excepthook = _handle_exception
 
-# Add src directory to module search path
+# Add paths to module search path
 root_dir = Path(__file__).resolve().parent
 src_dir = root_dir / "src"
-if str(src_dir) not in sys.path:
-    sys.path.insert(0, str(src_dir))
+for p in (str(root_dir), str(src_dir)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
-from app import main
+try:
+    from src.app import main
+except ImportError:
+    from app import main
 
 if __name__ == "__main__":
     main()

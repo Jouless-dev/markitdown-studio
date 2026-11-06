@@ -20,8 +20,11 @@ def build():
         "--windowed",
         "--name", "MarkItDown Studio",
         "--icon", str(icon_path),
+        "--paths", str(root),
+        "--paths", str(root / "src"),
         "--add-data", f"{ui_dir};src/ui",
         "--add-data", f"{assets_dir};assets",
+        "--collect-all", "src",
         "--collect-all", "webview",
         "--collect-all", "pythonnet",
         "--collect-all", "clr_loader",
@@ -34,6 +37,10 @@ def build():
         "--collect-all", "docx",
         "--collect-all", "bs4",
         "--collect-all", "markdownify",
+        "--hidden-import", "src",
+        "--hidden-import", "src.app",
+        "--hidden-import", "src.config",
+        "--hidden-import", "src.converter",
         str(root / "main.py")
     ]
 
