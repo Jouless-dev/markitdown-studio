@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/app.png" width="96" height="96" alt="MarkItDown Studio Logo">
+</p>
+
 # MarkItDown Studio
 
 Desktop application for Microsoft Windows that converts documents, spreadsheets, presentations, and structured data into clean CommonMark Markdown using the Microsoft MarkItDown engine.
@@ -36,9 +40,11 @@ MarkItDown Studio provides a desktop interface for converting arbitrary document
 
 ### 1. Standalone Portable Package (Recommended)
 
-1. Download `MarkItDown-Studio-v1.0.0-Windows-x64-Portable.zip` from the project Releases page.
-2. Extract the archive to any local directory.
-3. Execute `MarkItDown Studio.exe` to launch. No runtime dependencies or administrator privileges are required.
+1. Download **`MarkItDown-Studio-v1.0.0-Windows-x64-Portable.zip`** from [GitHub Releases](https://github.com/Jouless-dev/markitdown-studio/releases/latest).
+2. Extract the archive to any folder on your machine.
+3. Launch **`MarkItDown Studio.exe`**.
+
+> **Note on Windows SmartScreen**: Because this is an independent open-source release without an expensive enterprise code-signing certificate, Windows Defender SmartScreen may display an "Unrecognized application" prompt on first launch. Click **More info** and select **Run anyway** to proceed.
 
 ### 2. Running from Source
 
