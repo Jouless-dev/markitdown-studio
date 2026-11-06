@@ -1,5 +1,21 @@
 import sys
+import os
+import traceback
+import ctypes
 from pathlib import Path
+
+# Native crash handler to guarantee errors are never silent
+def _handle_exception(exc_type, exc_value, exc_tb):
+    err_text = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+    try:
+        base_dir = Path(sys.executable).parent if getattr(sys, 'frozen', False) else Path(__file__).resolve().parent
+        with open(base_dir / "crash.log", "w", encoding="utf-8") as f:
+            f.write(err_text)
+    except Exception:
+        pass
+    ctypes.windll.user32.MessageBoxW(0, f"Application Error:\n\n{err_text}", "MarkItDown Studio Error", 0x10)
+
+sys.excepthook = _handle_exception
 
 # Add src directory to module search path
 root_dir = Path(__file__).resolve().parent

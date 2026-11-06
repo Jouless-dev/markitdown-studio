@@ -22,9 +22,18 @@ def build():
         "--icon", str(icon_path),
         "--add-data", f"{ui_dir};src/ui",
         "--add-data", f"{assets_dir};assets",
-        "--collect-all", "magika",
+        "--collect-all", "webview",
+        "--collect-all", "pythonnet",
+        "--collect-all", "clr_loader",
         "--collect-all", "markitdown",
-        "--collect-all", "pywebview",
+        "--collect-all", "magika",
+        "--collect-all", "mammoth",
+        "--collect-all", "openpyxl",
+        "--collect-all", "pdfminer",
+        "--collect-all", "pptx",
+        "--collect-all", "docx",
+        "--collect-all", "bs4",
+        "--collect-all", "markdownify",
         str(root / "main.py")
     ]
 
