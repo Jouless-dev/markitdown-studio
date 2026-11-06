@@ -47,6 +47,11 @@ def build():
     subprocess.run(cmd, cwd=str(root), check=True)
 
     dist_dir = root / "dist" / "MarkItDown Studio"
+    config_src = root / "MarkItDown Studio.exe.config"
+    if config_src.exists():
+        shutil.copy2(config_src, dist_dir / "MarkItDown Studio.exe.config")
+        print("Copied .NET loadFromRemoteSources configuration to portable distribution.")
+
     zip_output = root / "dist" / "MarkItDown-Studio-v1.0.0-Windows-x64-Portable"
     print("Compressing portable release into ZIP...")
     shutil.make_archive(str(zip_output), "zip", root / "dist", "MarkItDown Studio")

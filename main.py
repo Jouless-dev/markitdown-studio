@@ -17,6 +17,23 @@ def _handle_exception(exc_type, exc_value, exc_tb):
 
 sys.excepthook = _handle_exception
 
+# Automatically unblock Zone.Identifier from bundled DLLs on Windows
+def _auto_unblock_self():
+    if sys.platform != "win32":
+        return
+    try:
+        base = Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).resolve().parent
+        kernel32 = ctypes.windll.kernel32
+        for dll in base.rglob("*.dll"):
+            try:
+                kernel32.DeleteFileW(f"{dll}:Zone.Identifier")
+            except Exception:
+                pass
+    except Exception:
+        pass
+
+_auto_unblock_self()
+
 # Add paths to module search path
 root_dir = Path(__file__).resolve().parent
 src_dir = root_dir / "src"
